@@ -3,11 +3,9 @@ import React from 'react';
 import './App.css';
 
 function Alert(props) {
-  
-
   return (
-    <div className={+ props.valid? 'alert alert-success': 'alert alert-danger'} role="alert">
-      {props.valid? 'Cadena valida': 'Cadena invalida'}
+    <div id="Result" className={props.valid? 'alert alert-success': 'alert alert-danger'} role="alert">
+      {props.valid? 'Valid string': 'Invalid string'}
     </div>
   )
 }
@@ -21,46 +19,64 @@ class App extends React.Component {
 
   }
 
-  validateString() {
+
+  validateString(){
+    let valid
     let string = this.state.valueString;
-    let occurs = string.match( RegExp(string[0], 'gi')).length;
-    let counter = occurs;
-    string = string.replace(RegExp(string[0], 'gi'), '');
-    let valid = true;
-    let removable = true;
-    console.log(string);
-    while (string && valid) {
-      console.log(string);
-      if (string.match( RegExp(string[0], 'gi')).length == counter) {
-        string = string.replace(RegExp(string[0], 'gi'), '');
-      } else {
-        if (removable) {
-          string = string.replace(RegExp(string[0], 'gi'), '');
-          removable = false
-        } else {
-          valid = false
+    let occurrences = [];
+    let char
+    while (string) {
+      char = string[0];
+      occurrences[char] = string.match( RegExp(char, 'gi')).length;
+      string = string.replace(RegExp(char, 'gi'), '');
+    }
+    console.log(occurrences);
+    let count = {}
+    Object.values(occurrences).forEach( element => {
+      count[element] != undefined? count[element] = count[element] + 1: count[element] = 1
+    });
+    console.log((count));
+    valid = false;
+    switch (Object.values(count).length ) {
+      case 1: {
+        valid = true;
+        break
+      };
+      case 2: {
+        if (Object.values(count)[0] == 1 || Object.values(count)[1]==1) {
+          let diff = Math.abs(Object.keys(count)[0] - Object.keys(count)[1]);
+          console.log(Object.keys(count)[0], Object.keys(count)[1]);
+          if ( diff == 1 ) {
+            valid = true
+          }
         }
+        break
       }
+
     }
 
     this.setState({valid: valid})
-    
   }
 
   handlerChange(e) {
     const text = e.target.value;
-    this.setState({valueString: text})
-  }
+    this.setState({valueString: text});
+  };
+
   
   render() {
     return (
-      <div className="App">
+      <div className="App d-flex justify-content-center align-items-center">
         <div className="jumbotron">
-          <h5>Sheerlock Strings</h5>
+          <h5>Sherlock and the valid string</h5>
           <p>Se verificara que la cadena sea valida</p>
-          
-          <input id="value" placeholder="Ingrese texto..." onChange={this.handlerChange} ></input>
-          <button onClick={this.validateString}>Verificar</button>
+          <form className="form-inline d-flex justify-content-center">
+            <div className="form-group mb-2">
+
+              <input className="form-control" id="value" placeholder="Enter string..." onChange={this.handlerChange} ></input>
+              <button type="button" className="btn btn-primary ml-2" onClick={this.validateString}>Validate</button>
+            </div>
+          </form>
         </div>
         {this.state.valid != undefined? <Alert valid={this.state.valid}/>: null}
       </div>
@@ -68,7 +84,5 @@ class App extends React.Component {
     );
   }
 }
-
-
 
 export default App;
