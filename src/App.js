@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './App.css';
 
 function Alert(props) {
@@ -16,7 +15,6 @@ class App extends React.Component {
     this.state = {valueString: "", valid: null};
     this.handlerChange = this.handlerChange.bind(this);
     this.validateString = this.validateString.bind(this)
-
   }
 
   countOccurrences(values) {
@@ -31,44 +29,29 @@ class App extends React.Component {
     let valid
     let string = this.state.valueString;
     let charOccurrences = this.countOccurrences(string.split(""));
-    console.log(charOccurrences)
     let occurrencesCounter = this.countOccurrences(Object.values(charOccurrences)) //count the chars with the same occurrences
-    console.log((occurrencesCounter));
     valid = false;
     switch (Object.values(occurrencesCounter).length ) {
       case 1: {
-        valid = true;
-        break
+        valid = true; break
       };
       case 2: { 
         //because could to remove one char only
-        // if (Object.values(occurrencesCounter)[0] == 1 || Object.values(occurrencesCounter)[1]==1) {
-        //   //char with unique occurrence
-        //   if ( Object.keys(occurrencesCounter)[0] == 1 || Object.keys(occurrencesCounter)[1] == 1) {
-        //     valid = true;
-        //   } else {
-        //     let toRemove
-        //     if (Object.keys(occurrencesCounter)[0] < Object.keys(occurrencesCounter)[1] ) {  }
-        //     let diff = Math.abs(Object.keys(occurrencesCounter)[0] - Object.keys(occurrencesCounter)[1]);
-        //     // console.log(Object.keys(occurrencesCounter)[0], Object.keys(occurrencesCounter)[1]);
-        //     if ( diff == 1) valid = true;
-        //   }
-        // }
-        // break
         let toRemove
-        let equalOccurrenceValue 
-        if (Object.values(occurrencesCounter)[0] == 1) { 
-          toRemove = Object.keys(occurrencesCounter)[0]; 
-          equalOccurrenceValue = Object.keys(occurrencesCounter)[1];}
-        else {
-          if (Object.values(occurrencesCounter)[1] == 1) { 
-            toRemove = Object.keys(occurrencesCounter)[1];
-            equalOccurrenceValue = Object.keys(occurrencesCounter)[0];
+        let equalOccurrencesValue 
+        if (Object.keys(occurrencesCounter)[0] > Object.keys(occurrencesCounter)[1]) {
+          if (Object.values(occurrencesCounter)[0] == 1) {
+            toRemove = Object.keys(occurrencesCounter)[0];
+            equalOccurrencesValue = Object.keys(occurrencesCounter)[1];
           }
-          else break
+        } else {
+          if (Object.values(occurrencesCounter)[1] == 1) {
+            toRemove = Object.keys(occurrencesCounter)[1];
+            equalOccurrencesValue = Object.keys(occurrencesCounter)[0];
+          }
         }
-        if (toRemove == 1 || toRemove - 1 == equalOccurrenceValue) {
-          valid = true;
+        if (toRemove - 1 == equalOccurrencesValue || occurrencesCounter['1'] == 1) {
+          valid = true; break
         }
       }
     }
